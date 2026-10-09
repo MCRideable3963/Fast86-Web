@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rust x86-64 Wasm Emulator</title>
+</head>
+<body>
+    <h1>x86-64 Wasm VM</h1>
+    <button id="step-btn">Step CPU</button>
+    <p>RAX Register: <span id="rax-val">0</span></p>
+
+    <script type="module">
+        import init, { VirtualMachine } from './pkg/your_wasm_package.js';
+
+        async function run() {
+            await init(); // Initialize the Wasm module
+
+            const vm = new VirtualMachine(1024 * 1024); // 1MB RAM
+            
+            // Simple machine code array: [NOP, MOV RAX Stub]
+            const program = new Uint8Array([0x90, 0xB8]); 
+            vm.load_program(program);
+
+            document.getElementById('step-btn').addEventListener('click', () => {
+                vm.step();
+                document.getElementById('rax-val').innerText = vm.get_rax();
+            });
+        }
+        run();
+    </script>
+</body>
+</html>
